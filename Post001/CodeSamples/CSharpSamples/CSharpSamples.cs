@@ -77,7 +77,7 @@ namespace CSharpSamples
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error occured: " + e.Message + Environment.NewLine + e.StackTrace);
+                Console.WriteLine("Error occurred: " + e.Message + Environment.NewLine + e.StackTrace);
             }
         }
     }

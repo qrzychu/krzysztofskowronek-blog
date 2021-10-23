@@ -21,7 +21,7 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // register our F# handlers
+            // register our handlers
             services.AddMediatR(typeof(FunctionalHandlers).Assembly, typeof(Startup).Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
