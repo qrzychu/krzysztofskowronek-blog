@@ -10,7 +10,7 @@ This may turn out to be a bit controversial, but I don't like functional ways of
 
 For all of that, you use functions, partial application or IO monad. Those facts on their own are not cons - they are in most cases a pro. For starters, partial application gives you compile time checks if your dependencies are set up correctly. IO monad gives you clear, type-system level indication about functions causing side effects.
 
-All of that is very neat, and you can even elevate your inner pride by throwing around the m-word, but in a real world, it does not compose very well with industry standards and can get very hard to manage with in bigger projects with multiple dependencies.
+All of that is very neat, and you can even elevate your inner pride by throwing around the m-word, but in a real world, it does not compose very well with dotnet industry standards and can get very hard to manage with in bigger projects with multiple dependencies.
 
 For example, if you want to create a REST API in F#, you would use [Giraffe](https://github.com/giraffe-fsharp/Giraffe). It's great, really. 
 
@@ -317,7 +317,7 @@ public class WeatherHandler : IRequestHandler<GetWeatherRequest, IEnumerable<CSh
 }
 ```
 
-I hope that there is nothing with this code and you agree that this is how you write `MediatR` handlers in C#.
+I hope that there is nothing wrong with this code and you agree that this is how you write `MediatR` handlers in C#.
 
 Now (drum roll....) in F#!
 
@@ -418,6 +418,6 @@ There is nothing stopping you from writing Controllers in F# also, but when you 
 
 # Conclusion
 
-As you can see, it's super easy to integrate F# and C# using `MediatR` as a bridge between the two worlds. You are able to combine the best features of both approaches, while leveraging huge dotnet ecosystem.
+As you can see, it's super easy to integrate F# and C#, especially using `MediatR` as a bridge between the two worlds. You are able to combine the best features of both approaches, while leveraging huge dotnet ecosystem.
 
-Jumping between C# and F# you are able to choose the best tool for given task, which gives you tons of flexibility. If you can force yourself you surface only fully compatible constructs (we do this by implementing handlers), your work becomes much easier.
+Jumping between C# and F# you are able to choose the best tool for given task, which gives you tons of flexibility. If you can force yourself you surface only fully compatible constructs (we do this by implementing handlers), your work becomes much easier. Take notice, that in the samples above we did not even touch on the real benefits of F# - we just replaced C# with equivalent code in F# and already we see improvements.
