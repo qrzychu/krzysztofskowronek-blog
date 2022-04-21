@@ -8,7 +8,7 @@ In this post we will explore why, how to solve those headaches and why it's not 
 
 We will start with a sequence of keys and values to fill out the dictionary:
 
-```f# script
+```f#
 let elements: seq<string * string> = Seq.init 5 id |> Seq.map (fun i -> ($"key {i}", $"value {i}"))
 
 // or inline initalization
@@ -17,14 +17,14 @@ let elementsInline: (string * string) list = [("key 1", "value 1"); ("key 2", "v
 
 Then, using IntelliSense exploration, we find how to construct the dictionary:
 
-```f# script
+```f#
 // type annotation is exactly what the compiler inferred
 let dictionary: System.Collections.Generic.IDictionary<string,string> = elements |> dict
 ```
 
 As you can see, the compiler tells us that now we work `IDictionary<string, string>` interface that we know from C#. This means, that we can write the following code and it will compile: 
 
-```f# script
+```f#
 dictionary.Add("new key", "new value")
 ```
 
@@ -34,7 +34,7 @@ Here wa hit the first headache: the `Add` method returns `void`, which means it 
 
 So what is our instinct? Add mutable keyword to the dictionary:
 
-```f# script
+```f#
 let mutable dictionary: System.Collections.Generic.IDictionary<string,string> = elements |> dict
 
 dictionary.Add("new key", "new value")
@@ -42,7 +42,7 @@ dictionary.Add("new key", "new value")
 
 But the same thing happens. Why? Well, the `mutable` keyword just lets us to overwrite the `dictionary` value with new instance, which is not what we want. Maybe the full type of the object will tell us more:
 
-```f# script
+```f#
 let dictionary: System.Collections.Generic.IDictionary<string,string> = elements |> dict
 
 dictionary.GetType()
@@ -52,19 +52,19 @@ gives us the following: ```Microsoft.FSharp.Core.ExtraTopLevelOperators+DictImpl
 
 This isn't our good old C# dictionary, but a F# specific proxy blocking all of our mutating operations. Let's try another trick and create C# dictionary explicitly by calling its constructor:
 
-```f# script
+```f#
 let dictionary: Dictionary<string,string> = elements |> dict |> Dictionary
 
 dictionary.Add("new key", "new value")
 ```
 
-Now it works! Unfortunately, now we have a mutable dictionary, but at least we already know how to use it.
+Now it works! Unfortunately, now we have a mutable dictionary, but at least we already know how to use it. To mitigate this, we can use `readOnlyDict` to get `IReadOnlyDictonary`, which will guard us at compile time also by not exposing methods for content modification.
 
 # What is the F# native solution?
 
 It is called `Map`, and can be used as follows:
 
-```f# script
+```f#
 let map = elements |> Map
 
 let newMap = map |> Map.add "new key" "new value"
@@ -72,7 +72,7 @@ let newMap = map |> Map.add "new key" "new value"
 
 Map offers all operations you expect: adding, removing, checking if key exists and so on. It also can be used as a sequence, just like `Dictionary` in C#:
 
-```f# script
+```f#
 let filteredMap = map
                     |> Seq.filter (fun (i : KeyValuePair<string,string>) -> i.Key.Contains("something") && i.Value > "a")
                     |> Seq.map (fun i -> (i.Key, i.Value)) // sadly, we need to map the KeyValuePair to a tuple
@@ -117,7 +117,7 @@ Fortunately, we can still access `System.Collections.Generic.Dictionary` when we
 Personally, I am quite happy with all of these options, because:
 
 - when you value immutability, you use `Map`
-- when you want that constant access complexity, you can still get it with `dict`
+- when you want that constant access complexity, you can still get it with `readOnlyDict`
 - for situations where a mutable dictionary offers best performance, you use C# implementation: `elements |> dict |> Dictionary`
 
 I hope this short exploration will be helpful for people trying out F# and hitting the dictionary wall, like I did some time ago.
